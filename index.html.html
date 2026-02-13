@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Für Ewunia ❤️</title>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@300;400;600&family=Urbanist:wght@300;400;500&display=swap');
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Urbanist', sans-serif;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+
+    @keyframes confetti {
+      0% {
+        transform: translateY(-100vh) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(100vh) rotate(720deg);
+        opacity: 0;
+      }
+    }
+
+    .fade-in {
+      animation: fadeIn 0.8s ease-out forwards;
+    }
+
+    .delay-1 { animation-delay: 0.2s; opacity: 0; }
+    .delay-2 { animation-delay: 0.4s; opacity: 0; }
+    .delay-3 { animation-delay: 0.6s; opacity: 0; }
+    .delay-4 { animation-delay: 0.8s; opacity: 0; }
+
+    .heartbeat {
+      animation: heartbeat 2s ease-in-out infinite;
+    }
+
+    .float {
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .confetti {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      animation: confetti 3s linear forwards;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState } = React;
+
+    function ValentineForEwunia() {
+      const [answered, setAnswered] = useState(false);
+      const [answer, setAnswer] = useState("");
+      const [showConfirmation, setShowConfirmation] = useState(false);
+
+      const sendNotification = async (message, title) => {
+        try {
+          await fetch('https://ntfy.sh/ewunia-valentine-xyz0604', {
+            method: 'POST',
+            body: message,
+            headers: {
+              'Title': title,
+              'Priority': 'high',
+              'Tags': message.includes('💕') ? 'heart,tada' : 'broken_heart'
+            }
+          });
+        } catch (error) {
+          console.log('Benachrichtigung konnte nicht gesendet werden');
+        }
+      };
+
+      const handleAnswer = (response) => {
+        setAnswer(response);
+        setAnswered(true);
+        setShowConfirmation(false);
+        
+        if (response === "ja") {
+          sendNotification(
+            'Ewunia hat JA gesagt! Sie verzeiht dir! 💕',
+            'Valentine Antwort'
+          );
+        }
+      };
+
+      const handleNoClick = () => {
+        setShowConfirmation(true);
+      };
+
+      const confirmNo = () => {
+        setAnswer("nein");
+        setAnswered(true);
+        sendNotification(
+          'Ewunia hat leider Nein gesagt... 💔',
+          'Valentine Antwort'
+        );
+      };
+
+      const cancelNo = () => {
+        setShowConfirmation(false);
+      };
+
+      return (
+        <div style={{
+          minHeight: '100vh',
+          background: 'linear-gradient(to bottom right, #fff1f2, #fef3c7, #fce7f3)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '1.5rem'
+        }}>
+          {answered && answer === "ja" && (
+            <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 50 }}>
+              {[...Array(30)].map((_, i) => (
+                <div
+                  key={i}
+                  className="confetti"
+                  style={{
+                    left: `${Math.random() * 100}%`,
+                    backgroundColor: ['#f43f5e', '#fb923c', '#fbbf24', '#ec4899'][Math.floor(Math.random() * 4)],
+                    animationDelay: `${Math.random() * 0.5}s`,
+                    opacity: Math.random() * 0.8 + 0.2
+                  }}
+                />
+              ))}
+            </div>
+          )}
+
+          <div style={{
+            maxWidth: '42rem',
+            width: '100%',
+            backgroundColor: 'rgba(255, 255, 255, 0.6)',
+            backdropFilter: 'blur(8px)',
+            borderRadius: '1rem',
+            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+            padding: '3rem',
+            border: '1px solid rgba(244, 63, 94, 0.1)'
+          }}>
+            {!answered ? (
+              <>
+                <div style={{ textAlign: 'center', marginBottom: '2rem' }} className="fade-in">
+                  <h1 style={{
+                    fontSize: '3rem',
+                    fontWeight: '300',
+                    marginBottom: '0.75rem',
+                    fontFamily: 'Crimson Pro, serif',
+                    color: '#be123c'
+                  }}>
+                    Liebe Ewunia
+                  </h1>
+                  <div style={{
+                    width: '6rem',
+                    height: '1px',
+                    background: 'linear-gradient(to right, transparent, #fb7185, transparent)',
+                    margin: '0 auto',
+                    opacity: '0.5'
+                  }}></div>
+                </div>
+
+                <div style={{ marginBottom: '2.5rem' }}>
+                  <p style={{
+                    fontSize: '1.125rem',
+                    lineHeight: '1.75',
+                    color: '#374151',
+                    marginBottom: '1.5rem',
+                    fontFamily: 'Urbanist, sans-serif'
+                  }} className="fade-in delay-1">
+                    Gestern habe ich einen Fehler gemacht, und es tut mir wirklich leid. Ich weiß, dass ich dich enttäuscht habe, und das liegt mir schwer auf dem Herzen.
+                  </p>
+
+                  <p style={{
+                    fontSize: '1.125rem',
+                    lineHeight: '1.75',
+                    color: '#374151',
+                    marginBottom: '1.5rem',
+                    fontFamily: 'Urbanist, sans-serif'
+                  }} className="fade-in delay-2">
+                    Du bedeutest mir unglaublich viel, und ich möchte nicht, dass ein Streit zwischen uns steht – besonders nicht heute.
+                  </p>
+
+                  <p style={{
+                    fontSize: '1.125rem',
+                    lineHeight: '1.75',
+                    color: '#374151',
+                    marginBottom: '1.5rem',
+                    fontFamily: 'Urbanist, sans-serif'
+                  }} className="fade-in delay-3">
+                    Deshalb frage ich dich, mit allem was ich habe:
+                  </p>
+
+                  <div style={{ textAlign: 'center', padding: '2rem 0' }} className="fade-in delay-4">
+                    <p style={{
+                      fontSize: '1.875rem',
+                      fontWeight: '300',
+                      marginBottom: '0.5rem',
+                      fontFamily: 'Crimson Pro, serif',
+                      color: '#be123c'
+                    }}>
+                      Möchtest du mein Valentin sein?
+                    </p>
+                    <p style={{
+                      fontSize: '1rem',
+                      color: '#6b7280',
+                      marginTop: '0.5rem',
+                      fontFamily: 'Urbanist, sans-serif'
+                    }}>
+                      Trotz allem?
+                    </p>
+                  </div>
+                </div>
+
+                <div style={{
+                  display: 'flex',
+                  gap: '1rem',
+                  justifyContent: 'center',
+                  marginBottom: '1rem'
+                }} className="fade-in delay-4">
+                  <button
+                    onClick={() => handleAnswer("ja")}
+                    style={{
+                      padding: '0.75rem 2rem',
+                      borderRadius: '9999px',
+                      fontWeight: '500',
+                      transition: 'all 0.3s',
+                      boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+                      fontFamily: 'Urbanist, sans-serif',
+                      backgroundColor: '#be123c',
+                      color: 'white',
+                      border: 'none',
+                      cursor: 'pointer',
+                      fontSize: '1rem'
+                    }}
+                    onMouseOver={(e) => e.target.style.transform = 'scale(1.05)'}
+                    onMouseOut={(e) => e.target.style.transform = 'scale(1)'}
+                  >
+                    Ja, ich verzeihe dir ❤️
+                  </button>
+                  <button
+                    onClick={handleNoClick}
+                    style={{
+                      padding: '0.75rem 2rem',
+                      borderRadius: '9999px',
+                      fontWeight: '500',
+                      transition: 'all 0.3s',
+                      boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+                      fontFamily: 'Urbanist, sans-serif',
+                      backgroundColor: 'white',
+                      color: '#be123c',
+                      border: '2px solid #be123c',
+                      cursor: 'pointer',
+                      fontSize: '1rem'
+                    }}
+                    onMouseOver={(e) => e.target.style.transform = 'scale(1.05)'}
+                    onMouseOut={(e) => e.target.style.transform = 'scale(1)'}
+                  >
+                    Noch nicht bereit
+                  </button>
+                </div>
+
+                {showConfirmation && (
+                  <div style={{
+                    marginTop: '2rem',
+                    padding: '1.5rem',
+                    backgroundColor: 'rgba(255, 241, 242, 0.5)',
+                    borderRadius: '0.75rem',
+                    border: '1px solid #fecdd3'
+                  }} className="fade-in">
+                    <p style={{
+                      fontSize: '1.125rem',
+                      color: '#374151',
+                      marginBottom: '1rem',
+                      textAlign: 'center',
+                      fontFamily: 'Urbanist, sans-serif'
+                    }}>
+                      Bist du dir wirklich sicher? Es tut mir so unglaublich leid...
+                    </p>
+                    <div style={{
+                      display: 'flex',
+                      gap: '0.75rem',
+                      justifyContent: 'center'
+                    }}>
+                      <button
+                        onClick={cancelNo}
+                        style={{
+                          padding: '0.5rem 1.5rem',
+                          borderRadius: '9999px',
+                          fontWeight: '500',
+                          transition: 'all 0.3s',
+                          fontFamily: 'Urbanist, sans-serif',
+                          backgroundColor: '#be123c',
+                          color: 'white',
+                          border: 'none',
+                          cursor: 'pointer'
+                        }}
+                        onMouseOver={(e) => e.target.style.transform = 'scale(1.05)'}
+                        onMouseOut={(e) => e.target.style.transform = 'scale(1)'}
+                      >
+                        Vielleicht doch... 💕
+                      </button>
+                      <button
+                        onClick={confirmNo}
+                        style={{
+                          padding: '0.5rem 1.5rem',
+                          borderRadius: '9999px',
+                          fontWeight: '500',
+                          transition: 'all 0.3s',
+                          fontFamily: 'Urbanist, sans-serif',
+                          backgroundColor: 'white',
+                          color: '#be123c',
+                          border: '2px solid #be123c',
+                          cursor: 'pointer'
+                        }}
+                        onMouseOver={(e) => e.target.style.transform = 'scale(1.05)'}
+                        onMouseOut={(e) => e.target.style.transform = 'scale(1)'}
+                      >
+                        Ja, bin ich
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </>
+            ) : (
+              <div style={{ textAlign: 'center' }} className="fade-in">
+                {answer === "ja" ? (
+                  <>
+                    <div className="float" style={{ marginBottom: '1.5rem' }}>
+                      <span style={{ fontSize: '5rem' }}>💕</span>
+                    </div>
+                    <h2 style={{
+                      fontSize: '2.25rem',
+                      fontWeight: '300',
+                      marginBottom: '1.5rem',
+                      fontFamily: 'Crimson Pro, serif',
+                      color: '#be123c'
+                    }}>
+                      Danke, Ewunia!
+                    </h2>
+                    <p style={{
+                      fontSize: '1.25rem',
+                      color: '#374151',
+                      lineHeight: '1.75',
+                      fontFamily: 'Urbanist, sans-serif'
+                    }}>
+                      Du machst mich zum glücklichsten Menschen. Ich verspreche dir, es besser zu machen.
+                    </p>
+                    <p style={{
+                      fontSize: '1.125rem',
+                      color: '#4b5563',
+                      marginTop: '1.5rem',
+                      fontFamily: 'Urbanist, sans-serif'
+                    }}>
+                      Ich liebe dich ❤️
+                    </p>
+                    <div style={{
+                      marginTop: '2rem',
+                      paddingTop: '1.5rem',
+                      borderTop: '1px solid rgba(244, 63, 94, 0.1)'
+                    }}>
+                      <p style={{
+                        fontSize: '1rem',
+                        color: '#6b7280',
+                        fontStyle: 'italic',
+                        fontFamily: 'Crimson Pro, serif'
+                      }}>
+                        P.S. Ich habe dir etwas Kleines als Entschuldigung in den Briefkasten gelegt...
+                      </p>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div style={{ marginBottom: '1.5rem' }}>
+                      <span style={{ fontSize: '4rem' }}>💔</span>
+                    </div>
+                    <h2 style={{
+                      fontSize: '1.875rem',
+                      fontWeight: '300',
+                      marginBottom: '1.5rem',
+                      fontFamily: 'Crimson Pro, serif',
+                      color: '#be123c'
+                    }}>
+                      Ich verstehe...
+                    </h2>
+                    <p style={{
+                      fontSize: '1.125rem',
+                      color: '#374151',
+                      lineHeight: '1.75',
+                      fontFamily: 'Urbanist, sans-serif'
+                    }}>
+                      Ich respektiere deine Entscheidung. Ich hoffe, du gibst mir die Chance, dir zu zeigen, dass es mir ernst ist.
+                    </p>
+                    <p style={{
+                      fontSize: '1rem',
+                      color: '#4b5563',
+                      marginTop: '1.5rem',
+                      fontFamily: 'Urbanist, sans-serif'
+                    }}>
+                      Du bedeutest mir so viel.
+                    </p>
+                  </>
+                )}
+              </div>
+            )}
+
+            <div style={{ marginTop: '3rem', textAlign: 'center' }}>
+              <p style={{
+                fontSize: '0.875rem',
+                color: '#9ca3af',
+                fontFamily: 'Urbanist, sans-serif'
+              }}>
+                Valentinstag 2026
+              </p>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.render(<ValentineForEwunia />, document.getElementById('root'));
+  </script>
+</body>
+</html>
